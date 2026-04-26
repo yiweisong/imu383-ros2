@@ -8,15 +8,8 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-
-find_library(LIBSERIAL_LIBRARY serial)
-
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/IMU383Data.msg"
-  DEPENDENCIES std_msgs
-)
+find_package(sensor_msgs REQUIRED)
+find_package(serial_driver REQUIRED)
 
 add_executable(imu383_node src/imu383_node.cpp)
 
@@ -28,11 +21,7 @@ target_include_directories(imu383_node PUBLIC
 
 target_compile_features(imu383_node PUBLIC cxx_std_17)
 
-ament_target_dependencies(imu383_node rclcpp std_msgs)
-target_link_libraries(imu383_node ${LIBSERIAL_LIBRARY})
-
-rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
-target_link_libraries(imu383_node "${cpp_typesupport_target}")
+ament_target_dependencies(imu383_node rclcpp sensor_msgs serial_driver)
 
 install(TARGETS imu383_node
   DESTINATION lib/${PROJECT_NAME}
