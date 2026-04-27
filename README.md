@@ -4,8 +4,8 @@ This package provides a ROS 2 (Jazzy) driver for the IMU383 sensor. It uses `ser
 
 ## Prerequisites
 
-- ROS 2 Jazzy (also works on newer/older distributions with minor changes)
-- Supported OS: Ubuntu 24.04 (Noble) or compatible Linux systems
+- ROS 2 Jazzy
+- Supported OS: Ubuntu 24.04 (Noble)
 - C++17 compiler
 
 ### Dependencies
@@ -22,7 +22,7 @@ Assuming you have a standard colcon workspace (e.g. `~/ros2_ws`), navigate to th
 
 ```bash
 cd ~/ros2_ws/src
-git clone https://github.com/yiweisong/imu383-ros2
+git clone https://github.com/yiweisong/imu383-ros2 imu383
 
 cd ~/ros2_ws
 colcon build --packages-select imu383
