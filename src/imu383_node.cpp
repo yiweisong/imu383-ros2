@@ -21,6 +21,7 @@ public:
     IMU383Node() : Node("imu383_node") {
         publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("/imu383/data", 10);
         configured_port_ = this->declare_parameter<std::string>("serial_port", "");
+        configured_baudrate_ = this->declare_parameter<int>("baudrate", 230400);
         io_context_ = std::make_unique<drivers::common::IoContext>(1);
         serial_driver_ = std::make_unique<drivers::serial_driver::SerialDriver>(*io_context_);
         
@@ -78,17 +79,6 @@ private:
         }
 
 #ifdef __linux__
-        const std::filesystem::path by_id_dir{"/dev/serial/by-id"};
-        if (std::filesystem::exists(by_id_dir) && std::filesystem::is_directory(by_id_dir)) {
-            for (const auto& entry : std::filesystem::directory_iterator(by_id_dir)) {
-                std::error_code ec;
-                const auto resolved = std::filesystem::canonical(entry.path(), ec);
-                if (!ec) {
-                    candidates.push_back(resolved.string());
-                }
-            }
-        }
-
         const std::array<std::string, 2> port_prefixes = {"/dev/ttyUSB", "/dev/ttyACM"};
         for (const auto& prefix : port_prefixes) {
             for (int i = 0; i < 20; ++i) {
@@ -112,7 +102,7 @@ private:
 
         try {
             const auto config = drivers::serial_driver::SerialPortConfig(
-                230400,
+                configured_baudrate_,
                 drivers::serial_driver::FlowControl::NONE,
                 drivers::serial_driver::Parity::NONE,
                 drivers::serial_driver::StopBits::ONE);
@@ -258,6 +248,7 @@ private:
     std::unique_ptr<drivers::serial_driver::SerialDriver> serial_driver_;
     std::shared_ptr<drivers::serial_driver::SerialPort> serial_port_;
     std::string configured_port_;
+    int configured_baudrate_;
     std::string active_port_name_;
 
     enum State {

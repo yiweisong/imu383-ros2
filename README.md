@@ -13,7 +13,7 @@ This package provides a ROS 2 (Jazzy) driver for the IMU383 sensor. It uses `ser
 Ensure the ROS 2 dependencies are installed:
 ```bash
 sudo apt-get update
-sudo apt-get install ros-jazzy-rclcpp ros-jazzy-sensor-msgs ros-jazzy-serial-driver
+sudo apt-get install ros-jazzy-rclcpp ros-jazzy-sensor-msgs ros-jazzy-serial-driver ros-jazzy-asio-cmake-module
 ```
 
 ## Build
@@ -21,6 +21,9 @@ sudo apt-get install ros-jazzy-rclcpp ros-jazzy-sensor-msgs ros-jazzy-serial-dri
 Assuming you have a standard colcon workspace (e.g. `~/ros2_ws`), navigate to the root of your workspace:
 
 ```bash
+cd ~/ros2_ws/src
+git clone https://github.com/yiweisong/imu383.git
+
 cd ~/ros2_ws
 colcon build --packages-select imu383
 source install/setup.bash
@@ -34,9 +37,9 @@ source install/setup.bash
    sudo usermod -aG dialout $USER
    ```
    *(You'll need to log out and back in for this to take effect)*
-3. **Optional fixed port parameter**: You can pin the port to avoid auto-discovery.
+3. **Optional fixed parameters**: You can pin the port and baudrate to avoid auto-discovery.
    ```bash
-   ros2 run imu383 imu383_node --ros-args -p serial_port:=/dev/ttyUSB0
+   ros2 run imu383 imu383_node --ros-args -p serial_port:=/dev/ttyUSB0 -p baudrate:=230400
    ```
 
 4. **Run the Node**:
@@ -62,10 +65,27 @@ This represents the primary driver for the sensor.
 
 #### Parameters
 - `serial_port` (string, default: empty):
-   - If set, the node tries this exact serial port first.
-   - If empty, the node auto-discovers by checking `/dev/serial/by-id` first and then falling back to `/dev/ttyUSB*` and `/dev/ttyACM*`.
+   - If set, the node tries this exact serial port and baudrate first.
+   - If empty, falling back to check `/dev/ttyUSB*` and `/dev/ttyACM*`, it will try from ttyUSB0/ttyACM0 to ttyUSB19/ttyACM19.
 
 ## Troubleshooting
 
-- **Node hangs on "Searching for device..."**: If auto-discovery fails, set `serial_port` explicitly and verify permissions.
+- **Node hangs on "Searching for device..."**: If auto-discovery fails, set `serial_port`, `baudrate` explicitly and verify permissions.
 - **CRC verification failed**: This can occasionally happen due to noise on the serial line or when connecting mid-stream. The parser will automatically drop corrupted packets and recover on the next valid sync byte.
+
+
+## Virualization
+The node can be virualized with plotjuggler.
+
+### Install plotjuggler
+```bash
+sudo snap install plotjuggler
+```
+
+### Add ROS2 Data Source
+1. In PlotJuggler, go to `Streaming`.
+2. Select the `ROS2 Topic Subscriber`, click `Start`, select the `/imu383/data` in `Topic Selector`, click `OK`.
+3. Drag the angular velocity and linear acceleration fields from the left panel to the plot area to visualize the data in real-time.
+
+### Screenshot
+![plotjuggler](images/screen.png)
