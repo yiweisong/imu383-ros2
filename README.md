@@ -12,8 +12,8 @@ This package provides a ROS 2 (Jazzy) driver for the IMU383 sensor. It uses `ser
 
 Ensure the ROS 2 dependencies are installed:
 ```bash
-sudo apt-get update
-sudo apt-get install ros-jazzy-rclcpp ros-jazzy-sensor-msgs ros-jazzy-serial-driver ros-jazzy-asio-cmake-module
+sudo apt update
+sudo apt install ros-jazzy-rclcpp ros-jazzy-sensor-msgs ros-jazzy-serial-driver ros-jazzy-asio-cmake-module
 ```
 
 ## Build
@@ -22,7 +22,7 @@ Assuming you have a standard colcon workspace (e.g. `~/ros2_ws`), navigate to th
 
 ```bash
 cd ~/ros2_ws/src
-git clone https://github.com/yiweisong/imu383.git
+git clone https://github.com/yiweisong/imu383-ros2
 
 cd ~/ros2_ws
 colcon build --packages-select imu383
