@@ -21,7 +21,7 @@ public:
     IMU383Node() : Node("imu383_node") {
         publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("/imu383/data", 10);
         configured_port_ = this->declare_parameter<std::string>("serial_port", "");
-        configured_baudrate_ = this->declare_parameter<int>("baudrate", 230400);
+        configured_baudrate_ = this->declare_parameter<int>("baudrate", 115200);
         io_context_ = std::make_unique<drivers::common::IoContext>(1);
         serial_driver_ = std::make_unique<drivers::serial_driver::SerialDriver>(*io_context_);
         

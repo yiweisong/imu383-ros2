@@ -39,7 +39,7 @@ source install/setup.bash
    *(You'll need to log out and back in for this to take effect)*
 3. **Optional fixed parameters**: You can pin the port and baudrate to avoid auto-discovery.
    ```bash
-   ros2 run imu383 imu383_node --ros-args -p serial_port:=/dev/ttyUSB0 -p baudrate:=230400
+   ros2 run imu383 imu383_node --ros-args -p serial_port:=/dev/ttyUSB0 -p baudrate:=115200
    ```
 
 4. **Run the Node**:
@@ -68,16 +68,19 @@ This represents the primary driver for the sensor.
    - If set, the node tries this exact serial port and baudrate first.
    - If empty, falling back to check `/dev/ttyUSB*` and `/dev/ttyACM*`, it will try from ttyUSB0/ttyACM0 to ttyUSB19/ttyACM19.
 
+- `baudrate` (int, default: 115200):
+   - The baudrate to use when connecting to the serial port. The available values are 57600, 115200 and 230400.
+
 ## Troubleshooting
 
 - **Node hangs on "Searching for device..."**: If auto-discovery fails, set `serial_port`, `baudrate` explicitly and verify permissions.
 - **CRC verification failed**: This can occasionally happen due to noise on the serial line or when connecting mid-stream. The parser will automatically drop corrupted packets and recover on the next valid sync byte.
 
 
-## Virualization
-The node can be virualized with plotjuggler.
+## Visualization
+The node can be visualized with PlotJuggler.
 
-### Install plotjuggler
+### Install PlotJuggler
 ```bash
 sudo snap install plotjuggler
 ```
